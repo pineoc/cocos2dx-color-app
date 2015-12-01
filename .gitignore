@@ -1,4 +1,7 @@
 #cocos2d lib
 cocos2d
 
-#
+#project folder
+proj.linux
+proj.win8.1-universal
+proj.win10

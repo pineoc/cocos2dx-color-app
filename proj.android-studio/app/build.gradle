@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "net.moon1000.colorGajah"
+        applicationId "net.moon1000.colorExample"
         minSdkVersion 10
         targetSdkVersion 22
         versionCode 1
