@@ -5,3 +5,4 @@ cocos2d
 proj.linux
 proj.win8.1-universal
 proj.win10
+proj.win32/Debug.win32
