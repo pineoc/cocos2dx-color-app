@@ -25,19 +25,20 @@ bool main::init()
 		return false;
 	}
 
-	modeBit=1;
-	p_size=1.0;
-	eraser_size=5.0;
-	p_color = Color4B::BLACK;
-	BlendFunc blendFunc1 = { GL_ONE, GL_ZERO };
-	blendFunc = blendFunc1;
+	//set values
+	modeBit = NORMALMODE;
+	brushSize = BRUSHSMALLSIZE;
+	eraserSize = ERASERSMALLSIZE;
+	brushColor = Color4B::BLACK;
+	BlendFunc tmpBlendFunc = { GL_ONE, GL_ZERO };
+	blendFunc = tmpBlendFunc;
 
 	visibleSize = Director::getInstance()->getVisibleSize();
 	origin = Director::getInstance()->getVisibleOrigin();
 
-	target = RenderTexture::create(visibleSize.width, visibleSize.height,kCCTexture2DPixelFormat_RGBA8888);
+	target = RenderTexture::create(visibleSize.width, visibleSize.height, kCCTexture2DPixelFormat_RGBA8888);
 	target->retain();
-	target->setPosition(Vec2(visibleSize.width/2, visibleSize.height/2));
+	target->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(target);
 
 	auto closeItem = MenuItemImage::create(
@@ -45,8 +46,8 @@ bool main::init()
 		"CloseSelected.png",
 		CC_CALLBACK_1(main::menuCloseCallback, this));
 
-	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
-		origin.y + closeItem->getContentSize().height/2));
+	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2 ,
+		origin.y + closeItem->getContentSize().height / 2));
 
 	// create menu, it's an autorelease object
 	auto menu = Menu::create(closeItem, NULL);
@@ -54,80 +55,81 @@ bool main::init()
 	this->addChild(menu, 2);
 
 	auto blackItem = MenuItemImage::create(
-		"btn.png","btn.png",
+		"btn.png", "btn.png",
 		CC_CALLBACK_1(main::blackSet, this));
 
-	blackItem->setPosition(Vec2(origin.x+100, origin.y+50));
+	blackItem->setPosition(Vec2(origin.x + 100, origin.y + 50));
 	blackItem->setColor(Color3B(0,0,0));
-	blackItem->setScale(1.5f);
+	blackItem->setScale(COLORSCALE);
 
 	auto toRedItem = MenuItemImage::create(
-		"btn.png","btn.png",
+		"btn.png",  "btn.png",
 		CC_CALLBACK_1(main::changeColor, this));
 
-	toRedItem->setPosition(Vec2(origin.x+200, origin.y+50));
+	toRedItem->setPosition(Vec2(origin.x + 200, origin.y + 50));
 	toRedItem->setColor(Color3B::RED);
-	toRedItem->setTag(1);
-	toRedItem->setScale(1.5f);
+	toRedItem->setTag(REDCOLORTAG);
+	toRedItem->setScale(COLORSCALE);
 
 	auto toOrangeItem = MenuItemImage::create(
-		"btn.png","btn.png",
+		"btn.png", "btn.png",
 		CC_CALLBACK_1(main::changeColor, this));
 
-	toOrangeItem->setPosition(Vec2(origin.x+300, origin.y+50));
+	toOrangeItem->setPosition(Vec2(origin.x + 300, origin.y + 50));
 	toOrangeItem->setColor(Color3B::ORANGE);
-	toOrangeItem->setTag(2);
-	toOrangeItem->setScale(1.5f);
+	toOrangeItem->setTag(ORANGECOLORTAG);
+	toOrangeItem->setScale(COLORSCALE);
 
 	auto toYellowItem = MenuItemImage::create(
-		"btn.png","btn.png",
+		"btn.png", "btn.png",
 		CC_CALLBACK_1(main::changeColor, this));
 
-	toYellowItem->setPosition(Vec2(origin.x+400, origin.y+50));
+	toYellowItem->setPosition(Vec2(origin.x + 400, origin.y + 50));
 	toYellowItem->setColor(Color3B::YELLOW);
-	toYellowItem->setTag(3);
-	toYellowItem->setScale(1.5f);
+	toYellowItem->setTag(YELLOWCOLORTAG);
+	toYellowItem->setScale(COLORSCALE);
 
 	auto toGreenItem = MenuItemImage::create(
-		"btn.png","btn.png",
+		"btn.png", "btn.png",
 		CC_CALLBACK_1(main::changeColor, this));
 
-	toGreenItem->setPosition(Vec2(origin.x+500, origin.y+50));
+	toGreenItem->setPosition(Vec2(origin.x + 500, origin.y + 50));
 	toGreenItem->setColor(Color3B::GREEN);
-	toGreenItem->setTag(4);
-	toGreenItem->setScale(1.5f);
+	toGreenItem->setTag(GREENCOLORTAG);
+	toGreenItem->setScale(COLORSCALE);
 
 	auto toBlueItem = MenuItemImage::create(
-		"btn.png","btn.png",
+		"btn.png", "btn.png",
 		CC_CALLBACK_1(main::changeColor, this));
 
-	toBlueItem->setPosition(Vec2(origin.x+600, origin.y+50));
+	toBlueItem->setPosition(Vec2(origin.x + 600, origin.y + 50));
 	toBlueItem->setColor(Color3B::BLUE);
-	toBlueItem->setTag(5);
-	toBlueItem->setScale(1.5f);
+	toBlueItem->setTag(BLUECOLORTAG);
+	toBlueItem->setScale(COLORSCALE);
 
 	auto eraserItem = MenuItemImage::create(
-		"eraser.png","eraser.png",
+		"eraser.png", "eraser.png",
 		CC_CALLBACK_1(main::changeColor, this));
-	eraserItem->setPosition(Vec2(origin.x+700, origin.y+50));
-	eraserItem->setTag(6);
-	eraserItem->setScale(1.5f);
+	eraserItem->setPosition(Vec2(origin.x + 700, origin.y + 50));
+	eraserItem->setTag(ERASERTAG);
+	eraserItem->setScale(COLORSCALE);
 
 	// create menu, it's an autorelease object
-	auto menu2 = Menu::create(blackItem,toRedItem,toOrangeItem,toYellowItem,
-		toGreenItem,toBlueItem,eraserItem, NULL);
-	menu2->setPosition(Vec2::ZERO);
-	this->addChild(menu2, 2);
+	auto colorMenu = Menu::create(blackItem, toRedItem, toOrangeItem, toYellowItem,
+		toGreenItem, toBlueItem, eraserItem, NULL);
+	colorMenu->setPosition(Vec2::ZERO);
+	this->addChild(colorMenu, 2);
 
 	MenuItemFont::setFontSize(30);
-	auto item1 = MenuItemFont::create("Clear", CC_CALLBACK_1(main::clearFunc, this));
+	auto clearMenu = MenuItemFont::create("Clear", CC_CALLBACK_1(main::clearFunc, this));
 	brushSizeMenu = MenuItemFont::create("Brush Size: S", CC_CALLBACK_1(main::sizeUpBrush, this));
 	eraserSizeMenu = MenuItemFont::create("Eraser Size : S", CC_CALLBACK_1(main::sizeUpEraser, this));
-	menu3 = Menu::create(brushSizeMenu,eraserSizeMenu,item1,nullptr);
-	this->addChild(menu3,2);
-	menu3->alignItemsHorizontallyWithPadding(20);
-	menu3->setColor(Color3B::BLACK);
-	menu3->setPosition(Vec2(visibleSize.width - 300, visibleSize.height - 30));
+
+	toolMenu = Menu::create(brushSizeMenu, eraserSizeMenu, clearMenu, nullptr);
+	toolMenu->alignItemsHorizontallyWithPadding(20);
+	toolMenu->setColor(Color3B::BLACK);
+	toolMenu->setPosition(Vec2(visibleSize.width - 300, visibleSize.height - 30));
+	this->addChild(toolMenu, 2);
 
 	auto listener = EventListenerTouchAllAtOnce::create();
 	//listener->setSwallowTouches(true);
@@ -152,38 +154,33 @@ void main::menuCloseCallback(Ref* pSender)
 #endif
 }
 
-void main::eraseGL(Ref* pSender)
-{
-	while(this->getChildByTag(123))
-		this->removeChildByTag(123);
-}
 void main::changeColor(Ref* pSender)
 {
 	MenuItemImage* mi = (MenuItemImage*)pSender;
 	int tag = mi->getTag();
 	switch (tag)
 	{
-	case 1:
-		p_color = Color4B::RED;
+	case REDCOLORTAG:
+		brushColor = Color4B::RED;
 		break;
-	case 2:
-		p_color = Color4B::ORANGE;
+	case ORANGECOLORTAG:
+		brushColor = Color4B::ORANGE;
 		break;
-	case 3:
-		p_color = Color4B::YELLOW;
+	case YELLOWCOLORTAG:
+		brushColor = Color4B::YELLOW;
 		break;
-	case 4:
-		p_color = Color4B::GREEN;
+	case GREENCOLORTAG:
+		brushColor = Color4B::GREEN;
 		break;
-	case 5:
-		p_color = Color4B::BLUE;
+	case BLUECOLORTAG:
+		brushColor = Color4B::BLUE;
 		break;
-	case 6:
-		p_color = Color4B::WHITE;
-		if(modeBit==2)
-			modeBit=3;
-		else if(modeBit==3)
-			modeBit=2;
+	case ERASERTAG:
+		brushColor = Color4B::WHITE;
+		if(BLACKMODE == modeBit)
+			modeBit = BLACKFILLMODE;
+		else if(BLACKFILLMODE == modeBit)
+			modeBit = BLACKMODE;
 		break;
 	default:
 		break;
@@ -191,26 +188,27 @@ void main::changeColor(Ref* pSender)
 }
 void main::blackSet(Ref* pSender)
 {
-	if(this->getChildByTag(124))
+	if(this->getChildByTag(BLACKSETTAG))
 		this->removeChild(pRTex);
 
-	menu3->setColor(Color3B::WHITE);
+	toolMenu->setColor(Color3B::WHITE);
 
 	pRTex = RenderTexture::create(visibleSize.width, visibleSize.height);
 	pRTex->setPosition(Vec2(visibleSize.width/2+2000.0f, visibleSize.height/2));
-	pRTex->setTag(124);
+	pRTex->setTag(BLACKSETTAG);
 	this->addChild(pRTex, 1);
 
-	modeBit=2;
+	modeBit = BLACKMODE;
 
-	Sprite* pBg = Sprite::create("b.png");
-	pBg->setAnchorPoint(Vec2(0.5,0.5));
-	pBg->setPosition(Vec2(visibleSize.width/2, visibleSize.height/2));
-	pBg->setScaleX(visibleSize.width/pBg->getContentSize().width);
-	pBg->setScaleY(visibleSize.height/pBg->getContentSize().height);
-	pBg->setColor(Color3B::BLACK);
+	Sprite* blackSprite = Sprite::create("b.png");
+	blackSprite->setAnchorPoint(Vec2(0.5,0.5));
+	blackSprite->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+	blackSprite->setScaleX(visibleSize.width / blackSprite->getContentSize().width);
+	blackSprite->setScaleY(visibleSize.height / blackSprite->getContentSize().height);
+	blackSprite->setColor(Color3B::BLACK);
+
 	pRTex->begin();
-	pBg->visit();
+	blackSprite->visit();
 	pRTex->end();
 
 	auto movAct = MoveTo::create(1,Vec2(visibleSize.width/2,visibleSize.height/2));
@@ -218,38 +216,38 @@ void main::blackSet(Ref* pSender)
 }
 void main::sizeUpBrush(Ref* pSender)
 {
-	if(p_size==1.0)
+	if(BRUSHSMALLSIZE == brushSize)
 	{
 		brushSizeMenu->setString("Brush Size: L");
-		p_size=2.0;
+		brushSize = BRUSHLARGESIZE;
 	}
 	else
 	{
 		brushSizeMenu->setString("Brush Size: S");
-		p_size=1.0;
+		brushSize = BRUSHSMALLSIZE;
 	}
 }
 void main::sizeUpEraser(Ref* pSender)
 {
-	if(eraser_size==5.0)
+	if(ERASERSMALLSIZE == eraserSize)
 	{
 		eraserSizeMenu->setString("eraser Size: L");
-		eraser_size=10.0;
+		eraserSize = ERASERLARGESIZE;
 	}
 	else
 	{
 		eraserSizeMenu->setString("eraser Size: S");
-		eraser_size=5.0;
+		eraserSize = ERASERSMALLSIZE;
 	}
 }
 
 void main::clearFunc(Ref* pSender)
 {
-	target->clear(0,0,0,0);
-	if(this->getChildByTag(124))
+	target->clear(0, 0, 0, 0);
+	if(this->getChildByTag(BLACKSETTAG))
 		pRTex->clear(0,0,0,0);
-	modeBit=1;
-	menu3->setColor(Color3B::BLACK);
+	modeBit = NORMALMODE;
+	toolMenu->setColor(Color3B::BLACK);
 }
 
 void main::onTouchesBegan(const std::vector<Touch*>&touches, Event* unused_event)
@@ -260,7 +258,8 @@ void main::onTouchesMoved(const std::vector<Touch*>&touches, Event* unused_event
 	Touch *touch = *touches.begin();
 	Point start = touch->getLocation();
 	Point end = touch->getPreviousLocation();
-	if(modeBit==1)
+
+	if(NORMALMODE == modeBit)
 	{
 		target->begin();
 
@@ -272,11 +271,11 @@ void main::onTouchesMoved(const std::vector<Touch*>&touches, Event* unused_event
 			for(int i = 0; i < d; ++i)
 			{
 				Sprite * sprite = Sprite::create("brush.png");
-				sprite->setColor(Color3B(p_color));
+				sprite->setColor(Color3B(brushColor));
 				sprite->setOpacity(20);
 				_brushs.pushBack(sprite);
 			}
-			for (int i = 0; i < d; i++)
+			for (int i = 0; i < d; ++i)
 			{
 				float difx = end.x - start.x;
 				float dify = end.y - start.y;
@@ -284,9 +283,9 @@ void main::onTouchesMoved(const std::vector<Touch*>&touches, Event* unused_event
 				_brushs.at(i)->setPosition(Vec2(start.x + (difx * delta), start.y + (dify * delta)));
 				_brushs.at(i)->setRotation(rand() % 360);
 				float r = (float)(rand() % 50 / 50.f) + 0.25f;
-				_brushs.at(i)->setScale(p_size*r);
-				if(_brushs.at(i)->getColor()==Color4B::WHITE)
-					_brushs.at(i)->setScale(eraser_size/5*r);
+				_brushs.at(i)->setScale(brushSize * r);
+				if(_brushs.at(i)->getColor() == Color4B::WHITE)
+					_brushs.at(i)->setScale(eraserSize / 5 * r);
 				_brushs.at(i)->visit();
 			}
 		}
@@ -294,7 +293,7 @@ void main::onTouchesMoved(const std::vector<Touch*>&touches, Event* unused_event
 	}
 	else
 	{
-		pRTex->begin();
+		pRTex->begin(); //black board draw start
 		float distance = start.getDistance(end);
 		if (distance > 1)
 		{
@@ -303,13 +302,13 @@ void main::onTouchesMoved(const std::vector<Touch*>&touches, Event* unused_event
 			for(int i = 0; i < d; ++i)
 			{
 				DrawNode* node = DrawNode::create();
-				if(modeBit==2)
-					node->drawDot(Vec2(),eraser_size,Color4F(0,0,0,0));
+				if(BLACKMODE == modeBit)
+					node->drawDot(Vec2(), eraserSize, Color4F(0,0,0,0));
 				else
-					node->drawDot(Vec2(),eraser_size,Color4F::BLACK);
+					node->drawDot(Vec2(), eraserSize, Color4F::BLACK);
 				_erasers.pushBack(node);
 			}
-			for (int i = 0; i < d; i++)
+			for (int i = 0; i < d; ++i)
 			{
 				float difx = end.x - start.x;
 				float dify = end.y - start.y;
@@ -318,11 +317,11 @@ void main::onTouchesMoved(const std::vector<Touch*>&touches, Event* unused_event
 				_erasers.at(i)->setRotation(rand() % 360);
 				float r = (float)(rand() % 50 / 50.f) + 0.25f;
 				_erasers.at(i)->setScale(r);
-				if(modeBit==2)
+				if(BLACKMODE == modeBit)
 					_erasers.at(i)->setBlendFunc(blendFunc);
 				_erasers.at(i)->visit();
 			}
 		}
-		pRTex->end();
+		pRTex->end(); //black board draw end
 	}
 }
