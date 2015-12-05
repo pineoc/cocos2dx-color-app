@@ -54,16 +54,24 @@ bool main::init()
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu, 2);
 
+	auto blackSetItem = MenuItemImage::create(
+		"blacksetBtn.png", "blacksetBtn.png",
+		CC_CALLBACK_1(main::blackSet, this));
+
+	blackSetItem->setPosition(Vec2(origin.x + 800, origin.y + 50));
+	blackSetItem->setScale(COLORSCALE);
+
 	auto blackItem = MenuItemImage::create(
 		"btn.png", "btn.png",
-		CC_CALLBACK_1(main::blackSet, this));
+		CC_CALLBACK_1(main::changeColor, this));
 
 	blackItem->setPosition(Vec2(origin.x + 100, origin.y + 50));
 	blackItem->setColor(Color3B(0,0,0));
+	blackItem->setTag(BLACKCOLORTAG);
 	blackItem->setScale(COLORSCALE);
 
 	auto toRedItem = MenuItemImage::create(
-		"btn.png",  "btn.png",
+		"btn.png", "btn.png",
 		CC_CALLBACK_1(main::changeColor, this));
 
 	toRedItem->setPosition(Vec2(origin.x + 200, origin.y + 50));
@@ -115,7 +123,7 @@ bool main::init()
 	eraserItem->setScale(COLORSCALE);
 
 	// create menu, it's an autorelease object
-	auto colorMenu = Menu::create(blackItem, toRedItem, toOrangeItem, toYellowItem,
+	auto colorMenu = Menu::create(blackSetItem, blackItem, toRedItem, toOrangeItem, toYellowItem,
 		toGreenItem, toBlueItem, eraserItem, NULL);
 	colorMenu->setPosition(Vec2::ZERO);
 	this->addChild(colorMenu, 2);
@@ -160,6 +168,9 @@ void main::changeColor(Ref* pSender)
 	int tag = mi->getTag();
 	switch (tag)
 	{
+	case BLACKCOLORTAG:
+		brushColor = Color4B::BLACK;
+		break;
 	case REDCOLORTAG:
 		brushColor = Color4B::RED;
 		break;
@@ -262,7 +273,6 @@ void main::onTouchesMoved(const std::vector<Touch*>&touches, Event* unused_event
 	if(NORMALMODE == modeBit)
 	{
 		target->begin();
-
 		float distance = start.getDistance(end);
 		if (distance > 1)
 		{
@@ -284,7 +294,7 @@ void main::onTouchesMoved(const std::vector<Touch*>&touches, Event* unused_event
 				_brushs.at(i)->setRotation(rand() % 360);
 				float r = (float)(rand() % 50 / 50.f) + 0.25f;
 				_brushs.at(i)->setScale(brushSize * r);
-				if(_brushs.at(i)->getColor() == Color4B::WHITE)
+				if(Color4B::WHITE == _brushs.at(i)->getColor())
 					_brushs.at(i)->setScale(eraserSize / 5 * r);
 				_brushs.at(i)->visit();
 			}

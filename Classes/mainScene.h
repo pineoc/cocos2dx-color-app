@@ -7,6 +7,7 @@ using namespace cocos2d;
 
 #define BLACKSETTAG 124
 
+#define BLACKCOLORTAG 0
 #define REDCOLORTAG 1
 #define ORANGECOLORTAG 2
 #define YELLOWCOLORTAG 3
