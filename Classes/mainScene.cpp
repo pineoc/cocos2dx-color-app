@@ -311,11 +311,26 @@ void main::onTouchesMoved(const std::vector<Touch*>&touches, Event* unused_event
 			_erasers.clear();
 			for(int i = 0; i < d; ++i)
 			{
-				DrawNode* node = DrawNode::create();
-				if(BLACKMODE == modeBit)
-					node->drawDot(Vec2(), eraserSize, Color4F(0,0,0,0));
+				Sprite* node;
+				//DrawNode* node = DrawNode::create();
+				if (ERASERLARGESIZE == eraserSize)
+					node = Sprite::create("b_eraser.png");
 				else
-					node->drawDot(Vec2(), eraserSize, Color4F::BLACK);
+					node = Sprite::create("b_eraser_small.png");
+
+
+				if (BLACKMODE == modeBit)
+				{ // erase blackset
+					//node->drawDot(Vec2(), eraserSize, Color4F(0, 0, 0, 0));
+					node->setColor(Color3B::WHITE);
+					node->setOpacity(0);
+				}
+				else
+				{ // fill blackset
+					//node->drawDot(Vec2(), eraserSize, Color4F::BLACK);
+					node->setColor(Color3B::BLACK);
+					node->setOpacity(255);
+				}
 				_erasers.pushBack(node);
 			}
 			for (int i = 0; i < d; ++i)

@@ -24,6 +24,7 @@ using namespace cocos2d;
 
 #define ERASERSMALLSIZE 5.0f
 #define ERASERLARGESIZE 10.0f
+#define ERASERDIVVALUE 10.0f
 
 #define COLORSCALE 1.5f
 
@@ -65,7 +66,8 @@ public:
 	RenderTexture *target;
 	Vector<Sprite*> _brushs;
 
-	Vector<DrawNode*> _erasers;
+	//Vector<DrawNode*> _erasers;
+	Vector<Sprite*> _erasers;
 	RenderTexture* pRTex;//black topBoard
 
 	BlendFunc blendFunc;
