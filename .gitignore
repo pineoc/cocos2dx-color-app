@@ -10,3 +10,5 @@ proj.ios_mac
 proj.android
 proj.android-studio
 .cocos-project.json
+
+*.apk
